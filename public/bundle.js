@@ -44,6 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 
@@ -161,10 +163,30 @@
 
 	var process = module.exports = {};
 
-	// cached from whatever global is present so that test runners that stub it don't break things.
-	var cachedSetTimeout = setTimeout;
-	var cachedClearTimeout = clearTimeout;
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
 
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
+	    }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
+	    }
+	  }
+	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -20328,6 +20350,8 @@
 /* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
 	var React = __webpack_require__(1);
 	var SearchUser = __webpack_require__(169);
 	var UserInfo = __webpack_require__(190);
@@ -20335,19 +20359,19 @@
 	var GitHub = React.createClass({
 	  displayName: 'GitHub',
 
-	  getInitialState: function () {
+	  getInitialState: function getInitialState() {
 	    return {
 	      user: null,
 	      repos: []
 	    };
 	  },
-	  updateUser: function (user) {
+	  updateUser: function updateUser(user) {
 	    this.setState({ user: user });
 	  },
-	  updateRepos: function (repos) {
+	  updateRepos: function updateRepos(repos) {
 	    this.setState({ repos: repos });
 	  },
-	  render: function () {
+	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
@@ -20369,13 +20393,15 @@
 /* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
 	var React = __webpack_require__(1);
 	var GitHubUser = __webpack_require__(170);
 
 	var SearchUser = React.createClass({
 	  displayName: 'SearchUser',
 
-	  handleSubmit: function (e) {
+	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 
 	    GitHubUser.getByUsername(this.refs.username.value).then(function (response) {
@@ -20387,7 +20413,7 @@
 	    }.bind(this));
 	  },
 
-	  render: function () {
+	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      { className: 'jumbotron' },
@@ -20441,14 +20467,16 @@
 /* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
 	var axios = __webpack_require__(171);
 
 	var GitHubUser = {
-	  getByUsername: function (username) {
+	  getByUsername: function getByUsername(username) {
 	    return axios.get('https://api.github.com/users/' + username);
 	  },
 
-	  getReposByUsername: function (username) {
+	  getReposByUsername: function getReposByUsername(username) {
 	    return axios.get('https://api.github.com/users/' + username + '/repos');
 	  }
 	};
@@ -21671,6 +21699,8 @@
 /* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
 	var React = __webpack_require__(1);
 
 	var UserRepos = __webpack_require__(191);
@@ -21732,20 +21762,22 @@
 /* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
 	var React = __webpack_require__(1);
 
 	var UserRepos = React.createClass({
 	  displayName: "UserRepos",
 
-	  getInitialState: function () {
+	  getInitialState: function getInitialState() {
 	    return {
 	      reposCount: 0
 	    };
 	  },
-	  componentWillReceiveProps: function (props) {
+	  componentWillReceiveProps: function componentWillReceiveProps(props) {
 	    this.setState({ reposCount: props.repos.length });
 	  },
-	  render: function () {
+	  render: function render() {
 	    var repos = this.props.repos.map(function (repo, key) {
 	      return React.createElement(
 	        "div",
