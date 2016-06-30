@@ -14,7 +14,7 @@ class UserRepos extends React.Component{
 
   render() {
     const { repos } = this.props;
-    const reposList = this.props.repos.map(function(repo, key) {
+    const reposList = repos.map((repo, key) => {
       return (
         <div key={key} className="thumbnail">
           <div className="caption">
